@@ -2,7 +2,7 @@
 
 (name hegel)
 
-(version 0.3.10)
+(version 0.3.11)
 
 (generate_opam_files true)
 
@@ -29,8 +29,8 @@
    (and
     :with-test
     (>= 1.7)))
-  (cbor
-   (>= 0.5))
+  (ocplib-endian
+   (>= 1.2))
   (checkseum
    (>= 0.5))
   (bisect_ppx
