@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.13 - 2026-05-07
+
+Bump our pinned hegel-core to [0.8.0](https://github.com/hegeldev/hegel-core/releases/tag/v0.8.0).
+
 ## 0.3.12 - 2026-05-06
 
 Raise conformance to hegel-core 0.7.0.
