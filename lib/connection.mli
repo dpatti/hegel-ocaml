@@ -16,11 +16,11 @@ exception
   Request_error of {
     message : string;
     error_type : string;
-    data : (CBOR.Simple.t * CBOR.Simple.t) list;
+    data : (Cbor.Simple.t * Cbor.Simple.t) list;
   }
 (** Error response from the peer. *)
 
-val result_or_error : CBOR.Simple.t -> CBOR.Simple.t
+val result_or_error : Cbor.Simple.t -> Cbor.Simple.t
 (** [result_or_error body] extracts the ["result"] field from a CBOR map, or
     raises {!Request_error} if an ["error"] field is present. *)
 
@@ -116,7 +116,7 @@ val send_request_raw : stream -> string -> int32
 (** [send_request_raw ch payload] sends raw bytes as a request and returns the
     message ID for matching the response. *)
 
-val send_request : stream -> CBOR.Simple.t -> int32
+val send_request : stream -> Cbor.Simple.t -> int32
 (** [send_request ch message] sends a CBOR-encoded request and returns the
     message ID. *)
 
@@ -125,7 +125,7 @@ val receive_response_raw : stream -> int32 -> ?timeout:float -> unit -> string
     bytes to a request with the given [message_id]. *)
 
 val receive_response :
-  stream -> int32 -> ?timeout:float -> unit -> CBOR.Simple.t
+  stream -> int32 -> ?timeout:float -> unit -> Cbor.Simple.t
 (** [receive_response ch message_id ?timeout ()] waits for and decodes a
     response, extracting the result or raising {!Request_error}. *)
 
@@ -133,14 +133,14 @@ val receive_request_raw : stream -> ?timeout:float -> unit -> int32 * string
 (** [receive_request_raw ch ?timeout ()] receives raw request bytes and returns
     [(message_id, payload)]. *)
 
-val receive_request : stream -> ?timeout:float -> unit -> int32 * CBOR.Simple.t
+val receive_request : stream -> ?timeout:float -> unit -> int32 * Cbor.Simple.t
 (** [receive_request ch ?timeout ()] receives and CBOR-decodes a request,
     returning [(message_id, decoded_value)]. *)
 
 val send_response_raw : stream -> int32 -> string -> unit
 (** [send_response_raw ch message_id payload] sends raw bytes as a reply. *)
 
-val send_response_value : stream -> int32 -> CBOR.Simple.t -> unit
+val send_response_value : stream -> int32 -> Cbor.Simple.t -> unit
 (** [send_response_value ch message_id value] sends a success response with
     [value] wrapped as [{"result": value}]. *)
 
@@ -150,15 +150,15 @@ val close_stream : stream -> unit
 type pending_request = {
   pr_stream : stream;
   pr_message_id : int32;
-  mutable pr_value : CBOR.Simple.t option;
+  mutable pr_value : Cbor.Simple.t option;
 }
 (** Pending request handle that caches the decoded response. *)
 
-val request : stream -> CBOR.Simple.t -> pending_request
+val request : stream -> Cbor.Simple.t -> pending_request
 (** [request ch message] sends a CBOR request and returns a {!pending_request}
     handle. *)
 
-val pending_get : pending_request -> CBOR.Simple.t
+val pending_get : pending_request -> Cbor.Simple.t
 (** [pending_get pr] blocks until the response arrives and returns the result.
     Caches the response so subsequent calls return the same value or raise the
     same error. *)

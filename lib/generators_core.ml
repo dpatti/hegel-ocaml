@@ -36,8 +36,8 @@ end
       given [label]. Used for tuples and one_of with non-basic elements. *)
 type 'a generator =
   | Basic : {
-      schema : CBOR.Simple.t;
-      transform : CBOR.Simple.t -> 'a;
+      schema : Cbor.Simple.t;
+      transform : Cbor.Simple.t -> 'a;
     }
       -> 'a generator
   | Mapped : { source : 'b generator; f : 'b -> 'a } -> 'a generator
@@ -83,7 +83,7 @@ let discardable_group label data f =
 
 type collection = {
   mutable finished : bool;
-  mutable collection_id : CBOR.Simple.t option;
+  mutable collection_id : Cbor.Simple.t option;
   min_size : int;
   max_size : int option;
 }
@@ -240,7 +240,7 @@ let flat_map f gen = FlatMapped { source = gen; f }
 let filter predicate gen = Filtered { source = gen; predicate }
 
 (** [schema gen] returns the schema for a [Basic] generator, or [None]. *)
-let schema : type a. a generator -> CBOR.Simple.t option = function
+let schema : type a. a generator -> Cbor.Simple.t option = function
   | Basic { schema; _ } -> Some schema
   | _ -> None
 
@@ -252,6 +252,6 @@ let is_basic : type a. a generator -> bool = function
 (** [as_basic gen] returns [Some (schema, transform)] if [gen] is [Basic], or
     [None] otherwise. *)
 let as_basic : type a.
-    a generator -> (CBOR.Simple.t * (CBOR.Simple.t -> a)) option = function
+    a generator -> (Cbor.Simple.t * (Cbor.Simple.t -> a)) option = function
   | Basic { schema; transform } -> Some (schema, transform)
   | _ -> None
