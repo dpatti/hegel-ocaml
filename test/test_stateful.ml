@@ -24,8 +24,7 @@ let stateful_failure_test () =
             rest)
   in
   (try
-     Hegel.run_hegel_test ~settings:(Hegel.settings ~seed:0 ())
-       (fun tc ->
+     Hegel.run_hegel_test ~settings:(Hegel.settings ~seed:0 ()) (fun tc ->
          let state_machine =
            S.make_machine ~init:[] ~rules:[ push_rule; pop_rule ] ()
          in
@@ -59,8 +58,8 @@ let stateful_variables_test () =
         assert (Set.mem state.State.live id);
         { state with State.live = Set.remove state.State.live id })
   in
-  Hegel.run_hegel_test
-    ~settings:(Hegel.settings ~test_cases:10 ~seed:0 ()) (fun tc ->
+  Hegel.run_hegel_test ~settings:(Hegel.settings ~test_cases:10 ~seed:0 ())
+    (fun tc ->
       next_id := 0;
       let state_machine =
         S.make_machine
@@ -97,8 +96,8 @@ let stateful_variables_draw_test () =
         assert (Set.mem state.State.live id);
         state)
   in
-  Hegel.run_hegel_test
-    ~settings:(Hegel.settings ~test_cases:5 ~seed:0 ()) (fun tc ->
+  Hegel.run_hegel_test ~settings:(Hegel.settings ~test_cases:5 ~seed:0 ())
+    (fun tc ->
       next_id := 0;
       let state_machine =
         S.make_machine
@@ -115,8 +114,7 @@ let stateful_rule_name_test () =
 
 let stateful_no_rules_test () =
   let raised_msg = ref "" in
-  Hegel.run_hegel_test ~settings:(Hegel.settings ~test_cases:1 ())
-    (fun tc ->
+  Hegel.run_hegel_test ~settings:(Hegel.settings ~test_cases:1 ()) (fun tc ->
       let state_machine =
         Hegel.Stateful.make_machine ~init:(fun _ -> ()) ~rules:[] ()
       in
@@ -133,8 +131,8 @@ let stateful_retry_budget_floor_test () =
         Hegel.assume tc false;
         s)
   in
-  Hegel.run_hegel_test
-    ~settings:(Hegel.settings ~test_cases:1 ~seed:0 ()) (fun tc ->
+  Hegel.run_hegel_test ~settings:(Hegel.settings ~test_cases:1 ~seed:0 ())
+    (fun tc ->
       let state_machine =
         S.make_machine ~init:(fun _ -> ()) ~rules:[ always_reject ] ()
       in
