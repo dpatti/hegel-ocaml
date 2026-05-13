@@ -70,7 +70,7 @@ let test_double_map_on_basic () =
   | Some s1, Some s2 ->
       Alcotest.(check bool)
         "schema unchanged" true
-        (CBOR.Simple.encode s1 = CBOR.Simple.encode s2)
+        (Cbor.Simple.encode s1 = Cbor.Simple.encode s2)
   | _ -> Alcotest.fail "expected both schemas"
 
 let test_map_on_non_basic_creates_mapped () =
@@ -190,7 +190,7 @@ let test_collection_more_stoptest () =
       (fun () ->
         let msg_id, _msg = receive_request peer_ch () in
         send_response_raw peer_ch msg_id
-          (CBOR.Simple.encode
+          (Cbor.Simple.encode
              (`Map
                 [
                   (`Text "error", `Text "Test case is being abandoned");

@@ -98,7 +98,7 @@ val extract_origin : exn -> string
 (** [extract_origin exn] extracts an InterestingOrigin string from an exception.
     Uses the backtrace if available. *)
 
-val generate_from_schema : CBOR.Simple.t -> test_case -> CBOR.Simple.t
+val generate_from_schema : Cbor.Simple.t -> test_case -> Cbor.Simple.t
 (** [generate_from_schema schema tc] generates a value from a schema by sending
     a generate command to the server. Raises {!Data_exhausted} if the server
     signals StopTest or {!Flaky_strategy} if it signals FlakyStrategyDefinition.
