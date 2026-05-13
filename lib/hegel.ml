@@ -1,5 +1,5 @@
 (** The current version of Hegel for OCaml. *)
-let version = "0.3.14"
+let version = "0.3.15"
 
 module Protocol = Protocol
 (** Binary wire protocol for packet serialization and deserialization. *)
@@ -52,3 +52,7 @@ let run_hegel_test = Session.run_hegel_test
 (** [default_settings ()] creates default test settings with CI auto-detection.
 *)
 let default_settings = Client.default_settings
+
+(** [settings ?test_cases ?seed ()] creates settings with the given overrides
+    applied to {!default_settings}. Convenience constructor for common cases. *)
+let settings = Client.settings
