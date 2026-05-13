@@ -9,9 +9,6 @@ module SE = EndianString.BigEndian_unsafe
 
 exception Error of string
 
-let ( @@ ) f x = f x
-let ( |> ) x f = f x
-
 let list_iteri f l =
   let i = ref 0 in
   List.iter

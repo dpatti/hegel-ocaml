@@ -395,7 +395,7 @@ let run_test client ~settings ?database_key test_fn =
         (List.Assoc.find_exn pairs ~equal:Poly.( = ) (`Text "results")))
     else (
       send_response_raw test_stream message_id
-        (CBOR.Simple.encode
+        (Cbor.Simple.encode
            (`Map
               [
                 (`Text "error", `Text (sprintf "Unrecognised event %s" event));

@@ -25,8 +25,8 @@ end
 
 type 'a generator =
   | Basic : {
-      schema : CBOR.Simple.t;
-      transform : CBOR.Simple.t -> 'a;
+      schema : Cbor.Simple.t;
+      transform : Cbor.Simple.t -> 'a;
     }
       -> 'a generator
   | Mapped : { source : 'b generator; f : 'b -> 'a } -> 'a generator
@@ -79,7 +79,7 @@ val discardable_group : int -> Client.test_case -> (unit -> 'a) -> 'a
 
 type collection = {
   mutable finished : bool;
-  mutable collection_id : CBOR.Simple.t option;
+  mutable collection_id : Cbor.Simple.t option;
   min_size : int;
   max_size : int option;
 }
@@ -121,13 +121,13 @@ val filter : ('a -> bool) -> 'a generator -> 'a generator
 (** [filter predicate gen] filters values from [gen] using [predicate]. Tries
     multiple times; calls [assume false] if all attempts fail. *)
 
-val schema : 'a generator -> CBOR.Simple.t option
+val schema : 'a generator -> Cbor.Simple.t option
 (** [schema gen] returns the schema for a [Basic] generator, or [None]. *)
 
 val is_basic : 'a generator -> bool
 (** [is_basic gen] returns [true] if [gen] is a [Basic] generator. *)
 
-val as_basic : 'a generator -> (CBOR.Simple.t * (CBOR.Simple.t -> 'a)) option
+val as_basic : 'a generator -> (Cbor.Simple.t * (Cbor.Simple.t -> 'a)) option
 (** [as_basic gen] returns [Some (schema, transform)] if [gen] is [Basic], or
     [None] otherwise. *)
 

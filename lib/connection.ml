@@ -36,7 +36,7 @@ exception
   Request_error of {
     message : string;
     error_type : string;
-    data : (CBOR.Simple.t * CBOR.Simple.t) list;
+    data : (Cbor.Simple.t * Cbor.Simple.t) list;
   }
 (** Error response from the peer. *)
 
@@ -215,7 +215,7 @@ let reader_loop conn =
                   message_id = pkt.message_id;
                   is_reply = true;
                   payload =
-                    CBOR.Simple.encode
+                    Cbor.Simple.encode
                       (`Map [ (`Text "error", `Text error_msg) ]);
                 }
             with _ -> ()))
@@ -417,7 +417,7 @@ let send_request_raw ch payload =
 
 (** [send_request ch message] sends a CBOR-encoded request and returns the
     message ID. *)
-let send_request ch message = send_request_raw ch (CBOR.Simple.encode message)
+let send_request ch message = send_request_raw ch (Cbor.Simple.encode message)
 
 (** [receive_response_raw ch message_id ?timeout ()] waits for raw response
     bytes to a request with the given [message_id]. *)
@@ -459,7 +459,7 @@ let send_response_raw ch message_id payload =
     [value] wrapped as [{"result": value}]. *)
 let send_response_value ch message_id value =
   send_response_raw ch message_id
-    (CBOR.Simple.encode (`Map [ (`Text "result", value) ]))
+    (Cbor.Simple.encode (`Map [ (`Text "result", value) ]))
 
 (** [close_stream ch] closes the stream and notifies the peer. Idempotent. *)
 let close_stream ch =
@@ -488,7 +488,7 @@ let close_stream ch =
 type pending_request = {
   pr_stream : stream;
   pr_message_id : int32;
-  mutable pr_value : CBOR.Simple.t option;
+  mutable pr_value : Cbor.Simple.t option;
 }
 (** Pending request handle that caches the decoded response. *)
 
