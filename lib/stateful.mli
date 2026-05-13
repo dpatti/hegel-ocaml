@@ -27,7 +27,7 @@
     let test_integer_stack () =
       run_hegel_test (fun tc ->
           let machine =
-            Stateful.make_machine ~init:(fun _tc -> []) ~rules:[ push; pop ] ()
+            Stateful.make_machine ~init:[] ~rules:[ push; pop ] ()
           in
           Stateful.run machine tc)
     ]} *)
@@ -38,7 +38,7 @@ module Variables : sig
 
   val create : Client.test_case -> 'a t
   (** Creates an empty {!Variables.t}. Variables are tied to a test case; do not
-      reuse one across trials. *)
+      reuse one across test cases. *)
 
   val add : 'a t -> 'a -> unit
   (** Records [value] in [variables] for later draws. *)
