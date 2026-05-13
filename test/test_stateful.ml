@@ -15,7 +15,7 @@ let stateful_failure_test () =
   in
   let pop_rule =
     S.Rule.create ~name:"pop" ~step:(fun tc stack ->
-        Hegel.Client.assume tc (not (List.is_empty stack));
+        Hegel.assume tc (not (List.is_empty stack));
         match stack with
         | [] -> assert false
         | top :: rest ->
@@ -130,7 +130,7 @@ let stateful_retry_budget_floor_test () =
   let module S = Hegel.Stateful in
   let always_reject =
     S.Rule.create ~name:"reject" ~step:(fun tc s ->
-        Hegel.Client.assume tc false;
+        Hegel.assume tc false;
         s)
   in
   Hegel.run_hegel_test
