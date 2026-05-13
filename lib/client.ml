@@ -234,6 +234,7 @@ let stop_span ?(discard = false) tc =
               ]))
     in
     ()
+
 (** Helper: send a pool-related request and translate StopTest into
     [Data_exhausted]. *)
 let pool_request tc fields =
