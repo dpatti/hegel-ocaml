@@ -812,55 +812,6 @@ let test_run_hegel_test_defaults () =
       in
       ignore (Cbor_helpers.extract_bool v))
 
-(* ---- phase_to_string ---- *)
-
-let test_phase_to_string () =
-  Alcotest.(check string)
-    "explicit" "explicit"
-    (Client.phase_to_string Client.Explicit);
-  Alcotest.(check string) "reuse" "reuse" (Client.phase_to_string Client.Reuse);
-  Alcotest.(check string)
-    "generate" "generate"
-    (Client.phase_to_string Client.Generate);
-  Alcotest.(check string)
-    "target" "target"
-    (Client.phase_to_string Client.Target);
-  Alcotest.(check string)
-    "shrink" "shrink"
-    (Client.phase_to_string Client.Shrink)
-
-(** Test: run_test sends a phases field on the wire when settings.phases is
-    [Some]. Reads back the run_test command and asserts the phases payload. *)
-let test_run_test_with_phases () =
-  with_fake_server
-    (fun peer_conn ->
-      let ctrl = control_stream peer_conn in
-      let msg_id, msg = receive_request ctrl () in
-      let pairs = Cbor_helpers.extract_dict msg in
-      let phases_val =
-        List.Assoc.find_exn pairs ~equal:Poly.( = ) (`Text "phases")
-      in
-      (match phases_val with
-      | `Array items ->
-          let names = List.map items ~f:Cbor_helpers.extract_string in
-          Alcotest.(check (list string))
-            "phases payload" [ "generate"; "shrink" ] names
-      | _ -> Alcotest.fail "phases field not an array");
-      let test_ch_id =
-        Int32.of_int_exn
-          (Cbor_helpers.extract_int
-             (List.Assoc.find_exn pairs ~equal:Poly.( = ) (`Text "stream_id")))
-      in
-      send_response_value ctrl msg_id `Null;
-      let test_ch = connect_stream peer_conn test_ch_id ~role:"Test" () in
-      send_test_done test_ch [ (`Text "interesting_test_cases", `Int 0) ])
-    (fun client ->
-      let settings =
-        Client.default_settings () |> Client.with_test_cases 0
-        |> Client.with_phases [ Client.Generate; Client.Shrink ]
-      in
-      run_test client ~settings (fun _tc -> ()))
-
 (* ---- pool helpers ---- *)
 
 (** Helper: emit a [test_case] event with a freshly connected data stream, run
@@ -1060,6 +1011,21 @@ let test_with_suppress_health_check () =
     (Poly.( = )
        (List.nth_exn s.Client.suppress_health_check 1)
        Client.Filter_too_much)
+
+let test_phase_to_string () =
+  Alcotest.(check string)
+    "explicit" "explicit"
+    (Client.phase_to_string Client.Explicit);
+  Alcotest.(check string) "reuse" "reuse" (Client.phase_to_string Client.Reuse);
+  Alcotest.(check string)
+    "generate" "generate"
+    (Client.phase_to_string Client.Generate);
+  Alcotest.(check string)
+    "target" "target"
+    (Client.phase_to_string Client.Target);
+  Alcotest.(check string)
+    "shrink" "shrink"
+    (Client.phase_to_string Client.Shrink)
 
 let test_with_phases () =
   let s =
@@ -1686,6 +1652,7 @@ let tests =
       test_with_suppress_health_check;
     Alcotest.test_case "phase_to_string" `Quick test_phase_to_string;
     Alcotest.test_case "with_phases" `Quick test_with_phases;
+    Alcotest.test_case "run_test with phases" `Quick test_run_test_phases;
     Alcotest.test_case "default_settings in CI" `Quick
       test_default_settings_in_ci;
     Alcotest.test_case "default_settings not in CI" `Quick
@@ -1694,7 +1661,6 @@ let tests =
     Alcotest.test_case "with_seed" `Quick test_with_seed;
     Alcotest.test_case "run_test with database_key" `Quick
       test_run_test_with_database_key;
-    Alcotest.test_case "run_test with phases" `Quick test_run_test_with_phases;
     Alcotest.test_case "pool_generate default consume" `Quick
       test_pool_generate_default_consume;
     Alcotest.test_case "pool_request StopTest" `Quick
